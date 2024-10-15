@@ -1,0 +1,15 @@
+
+~
+java:S1488$"\Immediately return this expression instead of assigning it to the temporary variable "post".(Ç‰êùÿÿÿÿ8›œ±–¦2
+v	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(«ÀÊ¸8œ±–¦2
+X	java:S125"<This block of commented-out lines of code should be removed.(Í€ÿÕ8Ğ®²–¦2
+Z
+java:S18546"8Remove this useless assignment to local variable "post".(Ç‰êùÿÿÿÿ8¯œ±–¦2
+K
+java:S14816")Remove this unused "post" local variable.(Ç‰êùÿÿÿÿ8°œ±–¦2
+C
+java:S1452P"&Remove usage of generic wildcard type.(‡²×û8³œ±–¦2
+a
+java:S1128"DRemove this unused import 'org.springframework.web.bind.annotation'.(Ñ»ïÒ8¸œ±–¦2
+@
+java:S1128"Remove this duplicated import.(Õë±Äøÿÿÿÿ8¹œ±–¦2

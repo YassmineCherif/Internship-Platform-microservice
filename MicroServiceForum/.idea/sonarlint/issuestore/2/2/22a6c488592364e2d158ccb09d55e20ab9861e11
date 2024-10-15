@@ -1,0 +1,31 @@
+
+„
+java:S1488™"aImmediately return this expression instead of assigning it to the temporary variable "savedPost".(­‰´Åûÿÿÿÿ8•˜µ—¦2
+v	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(ÜÖÅƒ8–˜µ—¦2
+g
+java:S22596"JA "NullPointerException" could be thrown; "existingPost" is nullable here.(ÕØºÁ8«˜µ—¦2
+e
+java:S2259ˆ"BA "NullPointerException" could be thrown; "post" is nullable here.(³°ÙÀÿÿÿÿÿ8«˜µ—¦2
+d
+java:S2259Q"BA "NullPointerException" could be thrown; "post" is nullable here.(ç¨³şÿÿÿÿ8ª˜µ—¦2
+d
+java:S2259g"BA "NullPointerException" could be thrown; "post" is nullable here.(³°ÙÀÿÿÿÿÿ8ª˜µ—¦2
+d
+java:S2259{"BA "NullPointerException" could be thrown; "post" is nullable here.(ç¨³şÿÿÿÿ8«˜µ—¦2
+X	java:S125"<This block of commented-out lines of code should be removed.(Ğ¢¸Ó8®˜µ—¦2
+]	java:S125="<This block of commented-out lines of code should be removed.(Â™ãıÿÿÿÿ8±˜µ—¦2
+X	java:S125I"<This block of commented-out lines of code should be removed.(õïÁ•8²˜µ—¦2
+^	java:S125–"<This block of commented-out lines of code should be removed.(ÏĞÑÿıÿÿÿÿ8¸˜µ—¦2
+^	java:S125œ"<This block of commented-out lines of code should be removed.(á£É©ÿÿÿÿÿ8¸˜µ—¦2
+I
+java:S1168¤"+Return an empty collection instead of null.(¥¹ï8Ç¹¸—¦2
+X	java:S125¨"<This block of commented-out lines of code should be removed.(ºú±h8¹˜µ—¦2
+@
+java:S1128
+"Remove this duplicated import.(òŒ®ñşÿÿÿÿ8¹˜µ—¦2
+;
+java:S1128"Remove this duplicated import.(Êõ˜º8¹˜µ—¦2
+J
+java:S1128".Remove this unused import 'java.util.HashSet'.(Ê‚êX8È¹¸—¦2
+Q
+java:S1128"/Remove this unused import 'java.util.Optional'.(¨˜ëİüÿÿÿÿ8È¹¸—¦2
