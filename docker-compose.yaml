@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+  
+  gateway:
+    container_name: gateway
+    image: "microserviceconvention-gateway"
+    build: ./ConventionGateWay
+    depends_on:
+      - eurekaserver
+    ports:
+      - "8083:8083"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eurekaserver:8761/eureka/
+
+  microservice:
+    container_name: microservice
+    image: "microserviceconvention-microservice"
+    build: ./MicroServiceConvention
+    depends_on:
+      - eurekaserver
+    ports:
+      - "8080:8080"
+    hostname: microserviceconvention
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eurekaserver:8761/eureka/
+    restart: always
+
+  eurekaserver:
+    container_name: eurekaserver
+    build: ./EurekaServerConvention
+    ports:
+      - "8761:8761"
+    hostname: eureka
+    image: "microserviceconvention-eurekaserver"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eurekaserver:8761/eureka/
+
