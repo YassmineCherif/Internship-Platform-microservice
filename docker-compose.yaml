@@ -1,0 +1,53 @@
+version: '3,9'
+services:
+  eureka-server:
+    container_name: eureka-server
+    image: ilefsaadaoui/eurekaserver
+    build: ./EurekaServer
+    ports:
+      - "8761:8761"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+
+  gateway:
+    container_name: gateway
+    image: ilefsaadaoui/gateway
+    build: ./Gateway
+    ports:
+      - "8093:8093"
+    depends_on:
+      - eureka-server
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+
+
+  microservice-forum:
+    container_name: microservice-forum
+    image: ilefsaadaoui/microserviceforum
+    build: ./MicroServiceForum
+    ports:
+      - "9090:9090"
+    depends_on:
+      - eureka-server
+      - mysqldb
+    environment:
+      MYSQL_HOST: mysqldb
+      MYSQL_PORT: 3306
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/MicroserviceForum_BD?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+
+
+  mysqldb:
+    image: mysql:8.0.13
+    container_name: mysqldb
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: MicroserviceForum_BD
+    ports:
+      - "3306:3306"
+
+
