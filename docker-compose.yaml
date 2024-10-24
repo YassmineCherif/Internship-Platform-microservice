@@ -1,0 +1,40 @@
+version: '3.9'
+
+services:
+
+  gateway:
+    container_name: gateway
+    image: sujetpostulation-gateway
+    build:
+      context: ./GatewaySujetPostulation
+    depends_on:
+      - eurekaserver
+    ports:
+      - "8093:8093"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eurekaserver:8761/eureka/
+    restart: always
+
+  microservice:
+    container_name: sujetpostulation
+    image: sujetpostulation-microservice
+    build:
+      context: ./SujetPostulation
+    depends_on:
+      - eurekaserver
+    ports:
+      - "8082:8082"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eurekaserver:8761/eureka/
+    restart: always
+
+  eurekaserver:
+    container_name: eurekaserver
+    image: sujetpostulation-eureka
+    build:
+      context: ./EurekaServerSujetPostulation
+    ports:
+      - "8761:8761"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eurekaserver:8761/eureka/
+    restart: always
