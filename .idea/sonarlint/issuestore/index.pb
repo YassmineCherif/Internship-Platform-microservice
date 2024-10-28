@@ -18,3 +18,7 @@ J
 Dockerfile,6\6\6651ddff6eb82c840ced7c1dddee15c6e1913dd4
 C
 docker-compose.yaml,e\f\ef8def03dc8f162799089e9b5f4321201c8810d5
+K
+app/config/keycloak.json.js,4\b\4b1cb82436619fb14367766c9cda0d83f6b87c07
+H
+app/config/keycloak.json,0\3\037e4a1d6b02eea63d6f14d3c41fe45a6d91b4f9
