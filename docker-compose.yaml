@@ -1,0 +1,222 @@
+services:
+  eureka-server:
+    container_name: eureka-server
+    image: novaforge/eurekaserver
+    build: ./EurekaDiscoveryServer
+    ports:
+      - "8761:8761"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    #profiles:
+    #  - test
+  gateway:
+    container_name: gateway
+    image: novaforge/gateway
+    build: ./Gateway
+    ports:
+      - "8081:8081"
+    depends_on:
+      - eureka-server
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    #profiles:
+    #  - test
+################################# ms user
+  user-service:
+    container_name: user-service
+    image: firaseljary/userservice
+    build: ./UserService  
+    ports:
+      - "8082:8082"
+    depends_on:
+      - eureka-server
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: true
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak:8080/realms/InternshipsRealm
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:8080/realms/InternshipsRealm/protocol/openid-connect/certs
+    #profiles:
+    #  - test1
+
+################################# ms convetion
+  microservice-convention:
+    container_name: microservice-convention
+    image: "karimklila/microserviceconvention"
+    build: ./MicroServiceConvention
+    depends_on:
+      - eureka-server
+    ports:
+      - "8083:8083"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    restart: always
+    #profiles:
+    #  - test1
+################################# ms forum
+  microservice-forum:
+    container_name: microservice-forum
+    image: ilefsaadaoui/microserviceforum
+    build: ./MicroServiceForum
+    ports:
+      - "8084:8084"
+    depends_on:
+      - eureka-server
+      - mysqldb_forum
+    environment:
+      MYSQL_HOST: mysqldb_forum
+      MYSQL_PORT: 3306
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb_forum:3306/MicroserviceForum_BD?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+    #profiles:
+    #  - test1
+
+################################# ms journal
+  msjournal:
+    container_name: msjournal
+    image: jawher27/gestionjournal
+    build: ./MSGestionJournal
+    ports:
+      - "8085:8085"
+    depends_on:
+      - eureka-server
+      - mysqldb_journal
+    environment:
+      MYSQL_HOST: mysqldb_journal
+      MYSQL_PORT: 3307
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb_journal:3306/MicroserviceJournal_BD?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+    #profiles:
+    #  - test
+################################# ms reclamation
+  reclamation:
+    container_name: reclamation
+    image: "mouwaffakhmoudi/reclamation"
+    build: ./Reclamation
+    depends_on:
+      - eureka-server
+    ports:
+      - "8086:8086"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    restart: always
+    #profiles:
+    #  - test1
+
+################################# ms sujet
+  microservice-sujetpostulation:
+    container_name: microservice-sujetpostulation
+    image: yasmincecherif/microservicesujetpostulation
+    build:
+      context: ./SujetPostulation
+    depends_on:
+      - eureka-server
+    ports:
+      - "8087:8087"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    restart: always
+    #profiles:
+    #  - test1
+###################################### keycloak
+  postgres:
+    image: postgres:15.5-alpine3.19
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    #profiles:
+     # - test
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0.0
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HTTP_ENABLED: true
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
+      KC_DB: postgres
+      KC_DB_VENDOR: POSTGRES
+      KC_DB_DATABASE: keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: password
+      KC_DB_ADDR: postgres
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    command: [ "start-dev" ]
+    #profiles:
+    #  - test
+# databases
+  mysqldb_forum:
+    image: mysql:8.0.13
+    container_name: mysqldb_forum
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: MicroserviceForum_BD
+    ports:
+      - "3306:3306"
+    #profiles:
+    #  - test1
+
+####### db journal
+  mysqldb_journal:
+    image: mysql:8.0.13
+    container_name: mysqldb_journal
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: MicroserviceJournal_BD
+    ports:
+      - "3307:3306"
+    #profiles:
+    #  - test
+
+  ## postgre 2
+  postgresql:
+    image: postgres:15.5-alpine3.19
+    container_name: postgresql_container
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: stagedb
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+        ###the node ms
+  node_app:
+    build:
+      context: ./microservice-Ms-Nodejs-Postgresql
+    container_name: node_app_container
+    environment:
+      DB_HOST: postgresql         # Specify the service name as the host
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: stagedb
+      DB_URL: postgres://postgres:postgres@postgresql:5432/stagedb
+    ports:
+    - "8088:8088"
+    depends_on:
+    - postgresql
+    - keycloak
+
+
+########## volumes
+volumes:
+  postgres_data:
+  pg_data:
+
+
+
+
