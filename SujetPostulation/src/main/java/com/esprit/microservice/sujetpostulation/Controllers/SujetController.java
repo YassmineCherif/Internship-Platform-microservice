@@ -10,7 +10,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/services/sujet")
+@RequestMapping("/sujet")
 @CrossOrigin(origins = "http://localhost:8082")
 public class SujetController {
 
@@ -19,12 +19,12 @@ public class SujetController {
     private final SujetService sujetService;
   //  private final UserService userService;
 
-    /*
-    @PostMapping("/add/{idadmin}")
-    public Sujet addSujet(@RequestBody Sujet sujet , @PathVariable Long idadmin) {
-        return sujetService.addSujet(sujet, idadmin);
+
+    @PostMapping("/add")
+    public Sujet addSujet(@RequestBody Sujet sujet ) {
+        return sujetService.addSujet(sujet);
     }
-*/
+
 
     @CrossOrigin(origins = "http://localhost:8082")
     @PutMapping("/{idSujet}")
@@ -50,10 +50,10 @@ public class SujetController {
 */
 
 
-    @GetMapping("/classe/{classena}")
-    public List<Sujet> findAll(@PathVariable String classena) {
+    @GetMapping("/All")
+    public List<Sujet> findAll() {
 
-        return sujetService.findAllSortedByMailentreprise(classena);
+        return sujetService.findAll();
     }
 
 

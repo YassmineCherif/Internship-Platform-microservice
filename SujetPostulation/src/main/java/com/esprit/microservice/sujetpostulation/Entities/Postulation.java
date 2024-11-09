@@ -27,14 +27,14 @@ public class Postulation {
     int statusentr;
     String comm;
 
-
+    @ManyToOne
+    @JoinColumn(name = "idsujet")
+    private Sujet sujet;
     /*
       @ManyToOne
     @JoinColumn(name = "iduser")
     private User user;
+  */
 
-    @ManyToOne
-    @JoinColumn(name = "idsujet")
-    private Sujet sujet;
-     */
+
 }

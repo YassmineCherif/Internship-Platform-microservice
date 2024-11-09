@@ -29,10 +29,13 @@ public class PostulationService {
     private SujetService sujetservice ;
 
     public Postulation addPostulation(Postulation postulation) {
+       postulation.setStatus(0);
+       postulation.setStatusentr(0);
         return postulationRepository.save(postulation);
     }
 
     public List<Postulation> getPostulationsByStatus(int status) {
+
         return postulationRepository.findByStatus(status);
     }
 

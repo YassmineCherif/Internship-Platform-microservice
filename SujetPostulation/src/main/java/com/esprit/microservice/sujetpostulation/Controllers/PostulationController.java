@@ -1,7 +1,9 @@
 package com.esprit.microservice.sujetpostulation.Controllers;
 
 import com.esprit.microservice.sujetpostulation.Entities.Postulation;
+import com.esprit.microservice.sujetpostulation.Entities.Sujet;
 import com.esprit.microservice.sujetpostulation.Repositories.PostulationRepository;
+import com.esprit.microservice.sujetpostulation.Services.EmailService;
 import com.esprit.microservice.sujetpostulation.Services.PostulationService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +18,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/services/postulation")
+@RequestMapping("/postulation")
 @CrossOrigin(origins = "http://localhost:8082")
 @Slf4j
 public class PostulationController {
@@ -24,32 +26,37 @@ public class PostulationController {
     private final PostulationRepository postulationRepository;
     private final PostulationService postulationService;
 
+    @Autowired
+    private EmailService emailService;
 
-    //milliseconds to days.
+    /*//milliseconds to days.
     //(1000 milliseconds * 60 seconds * 60 minutes * 24 hours).
-    private boolean isValidPeriod(Date dateDebut, Date dateFin, int minimumDurationInDays) {
+    private boolean isValidPemailServiceeriod(Date dateDebut, Date dateFin, int minimumDurationInDays) {
         long differenceInTime = dateFin.getTime() - dateDebut.getTime();
         long differenceInDays = differenceInTime / (1000 * 3600 * 24);
         return differenceInDays >= minimumDurationInDays;
+    }*/
+
+
+    @PostMapping("/add")
+    public Postulation addSujet(@RequestBody Postulation postulation ) {
+        return postulationService.addPostulation(postulation);
     }
 
 
     @GetMapping("/byAccepted")
     public List<Postulation> filterByAccepted() {
-        List<Postulation> acceptedPostulations = postulationService.getPostulationsByStatus(1);
-        return acceptedPostulations;
+        return postulationService.getPostulationsByStatus(1);
     }
 
     @GetMapping("/byRefused")
     public List<Postulation> filterByRefused() {
-        List<Postulation> refusedPostulations = postulationService.getPostulationsByStatus(2);
-        return refusedPostulations;
+        return postulationService.getPostulationsByStatus(2);
     }
 
     @GetMapping("/byAttente")
     public List<Postulation> filterByAttente() {
-        List<Postulation> waitingPostulations = postulationService.getPostulationsByStatus(0);
-        return waitingPostulations;
+        return postulationService.getPostulationsByStatus(0);
     }
 
 
@@ -77,10 +84,22 @@ public class PostulationController {
     }
 
 
-    @PutMapping("/confirm-postulation/{idP}/{userRole}")
-    public Postulation confirmPostulation(@PathVariable long idP, @PathVariable String userRole) {
-        log.info("idP: " + idP);
-        log.info("idadmin: " + userRole);
+    @PutMapping("/confirm-postulation/{idP}/{toemail}")
+    public void confirmPostulation(@PathVariable long idP, @PathVariable String toemail ) {
+
+
+        Postulation postulation = postulationService.findById(idP);
+        postulation.setStatus(1);
+        postulationService.updatePostulation(postulation, idP);
+            // Send confirmation email to the student
+            sendResultEmail(postulation,toemail, "accepted");
+            //Stage stage = new Stage();
+            //stageService.addStage(stage);
+
+
+
+
+        /*
         Postulation postulation = postulationService.findById(idP);
         if (userRole.equals("Agententreprise")) {
             postulation.setStatusentr(1);
@@ -93,19 +112,30 @@ public class PostulationController {
         if (postulation.getStatusentr() == 1 && postulation.getStatus() == 1) {
             postulationService.updatePostulation(postulation, idP);
             // Send confirmation email to the student
-           // sendConfirmationEmail(postulation);
+            sendResultEmail(postulation,toemail, "accepted");
             //Stage stage = new Stage();
             //stageService.addStage(stage);
         }
 
         return postulation;
+        */
+
     }
 
 
-    @PutMapping("/reject-postulation/{idP}/{userRole}")
-    public Postulation rejectPostulation(@PathVariable long idP, @PathVariable String userRole) {
+    @PutMapping("/reject-postulation/{idP}/{toemail}")
+    public void rejectPostulation(@PathVariable long idP,@PathVariable String toemail ) {
 
-        log.info("idP: " + idP);
+            Postulation postulation = postulationService.findById(idP);
+            postulation.setStatus(1);
+            postulationService.updatePostulation(postulation, idP);
+            // Send confirmation email to the student
+            sendResultEmail(postulation,toemail, "rejected");
+
+
+
+
+        /*log.info("idP: " + idP);
         log.info("idadmin: " + userRole);
         Postulation postulation = postulationService.findById(idP);
         if (userRole.equals("Agententreprise")) {
@@ -119,30 +149,20 @@ public class PostulationController {
         if (postulation.getStatusentr() == 2 && postulation.getStatus() == 2) {
             postulationService.updatePostulation(postulation, idP);
             // Send confirmation email to the student
-           // sendRejectionEmail(postulation);
+            sendResultEmail(postulation,toemail, "rejected");
 
         }
 
-        return postulation;
-    }
-/**
-    private void sendConfirmationEmail(Postulation postulation) {
-        String toEmail = postulation.getUser().getEmail();
-        String subject = "Confirmation of your internship application";
-        String body = "Hello " + postulation.getUser().getFirstName() + " " + postulation.getUser().getLastName() +
-                ", your internship application for the company " + postulation.getSujet().getNomentreprise() +
-                " has been accepted.";
-        emailService.sendSimpleEmail(toEmail, subject, body);
+        return postulation;*/
     }
 
-    private void sendRejectionEmail(Postulation postulation) {
-        String toEmail = postulation.getUser().getEmail();
-        String subject = "Rejection of your internship application";
-        String body = "Hello " + postulation.getUser().getFirstName() + " " + postulation.getUser().getLastName() +
-                ", your internship application for the company " + postulation.getSujet().getNomentreprise() +
-                " has been rejected.";
-        emailService.sendSimpleEmail(toEmail, subject, body);
-    }
 
-*/
+        private void sendResultEmail(Postulation postulation, String toemail, String result) {
+            String subject = "Result of Your Internship Application";
+            String body = "Hello " + ", your internship application for the company " + postulation.getSujet().getNomentreprise() +
+                    " has been "+ result + " .";
+            emailService.sendSimpleEmail(toemail, subject, body);
+        }
+
+
 }

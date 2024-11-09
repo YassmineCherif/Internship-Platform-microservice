@@ -29,14 +29,11 @@ public class SujetService {
     private UserRepository userRepository ;
 
 
-    @Override
-    public Sujet addSujet(Sujet sujet,long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
-        sujet.setUser(user);
+    */
+    public Sujet addSujet(Sujet sujet) {
         return sujetRepository.save(sujet);
     }
 
-    */
 
 
 
@@ -74,6 +71,7 @@ public class SujetService {
 
 
     public List<Sujet> findAll() {
+
         return (List<Sujet>)sujetRepository.findAll();
     }
 
