@@ -5,4 +5,3 @@ WORKDIR /app
 EXPOSE 9090
 ADD target/MicroServiceReclamation-0.0.1-SNAPSHOT.jar reclamation.jar
 ENTRYPOINT ["java","-jar","reclamation.jar"]
-
