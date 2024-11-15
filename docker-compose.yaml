@@ -4,7 +4,7 @@ services:
   
   gateway:
     container_name: gateway
-    image: "microserviceconvention-gateway"
+    image: "karimklila/conventiongateway"
     build: ./ConventionGateWay
     depends_on:
       - eurekaserver
@@ -15,7 +15,7 @@ services:
 
   microservice:
     container_name: microservice
-    image: "microserviceconvention-microservice"
+    image: "karimklila/microserviceconvention"
     build: ./MicroServiceConvention
     depends_on:
       - eurekaserver
@@ -32,7 +32,7 @@ services:
     ports:
       - "8761:8761"
     hostname: eureka
-    image: "microserviceconvention-eurekaserver"
+    image: "karimklila/eurekaserverconvention"
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eurekaserver:8761/eureka/
 
